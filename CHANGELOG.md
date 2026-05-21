@@ -1,3 +1,10 @@
+# 1.0.0 (2026-05-21)
+
+
+### Features
+
+* initial release of @wyre-technology/node-auvik ([74d83f8](https://github.com/wyre-technology/node-auvik/commit/74d83f877b36197da791f158fd9e93fbe33aef1b))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
