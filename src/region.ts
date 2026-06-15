@@ -2,7 +2,7 @@ import type { AuvikRegion } from './types/index.js';
 import { buildBasicAuth } from './auth.js';
 import { AuvikAuthError, AuvikError } from './errors.js';
 
-const REGIONS: AuvikRegion[] = ['us1', 'us2', 'us3', 'us4', 'eu1', 'eu2', 'au1', 'ca1'];
+const REGIONS: AuvikRegion[] = ['us1', 'us2', 'us3', 'us4', 'us5', 'eu1', 'eu2', 'au1', 'ca1'];
 const REGION_TIMEOUT = 5000; // 5 seconds per region
 let cachedRegion: AuvikRegion | null = null;
 
