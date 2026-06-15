@@ -10,7 +10,7 @@ export * from './alerts.js';
 export * from './statistics.js';
 export * from './billing.js';
 
-export type AuvikRegion = 'us1' | 'us2' | 'us3' | 'us4' | 'us5' | 'eu1' | 'eu2' | 'au1' | 'ca1';
+export type AuvikRegion = 'us1' | 'us2' | 'us3' | 'us4' | 'us5' | 'us6' | 'lnx' | 'eu1' | 'eu2' | 'au1' | 'ca1';
 
 export interface AuvikClientConfig {
   username: string;
