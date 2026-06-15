@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/wyre-technology/node-auvik/compare/v1.1.0...v1.2.0) (2026-06-15)
+
+
+### Features
+
+* add us6 and lnx Auvik API regions ([#13](https://github.com/wyre-technology/node-auvik/issues/13)) ([c612c08](https://github.com/wyre-technology/node-auvik/commit/c612c08a0c145dd1a0614e3c974cdca222dc7b73))
+
 # [1.1.0](https://github.com/wyre-technology/node-auvik/compare/v1.0.0...v1.1.0) (2026-06-15)
 
 
