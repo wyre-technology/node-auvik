@@ -93,8 +93,13 @@ export class HttpClient {
 
       if (response.ok) {
         if (response.status === 204) return {} as T;
+        // Match any JSON content-type. The Auvik API is JSON:API and responds
+        // with `application/vnd.api+json` (often with a `; charset=utf-8`
+        // suffix), so a strict `application/json` check would silently drop the
+        // body and return `{}` — which makes resource mappers throw
+        // "Cannot read properties of undefined (reading 'id')".
         const contentType = response.headers.get('content-type');
-        if (contentType?.includes('application/json')) {
+        if (contentType?.includes('json')) {
           return response.json() as Promise<T>;
         }
         return {} as T;

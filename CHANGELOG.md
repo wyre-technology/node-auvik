@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **JSON:API responses were silently dropped, breaking every list/get call.** The HTTP client only parsed the body when `content-type` contained `application/json`, but the Auvik API is JSON:API and responds with `application/vnd.api+json`. As a result every successful response returned `{}`, and resource mappers then threw `Cannot read properties of undefined (reading 'id')`. The check now matches any JSON content-type (`includes('json')`), covering `application/vnd.api+json` and `; charset=utf-8` suffixes. Added a regression test.
+
 ### Added
 - Support for the `us6` and `lnx` Auvik API regions (`auvikapi.us6.my.auvik.com`, `auvikapi.lnx.my.auvik.com`). Added to the `AuvikRegion` type and the auto-resolution probe list so credentials on those US East (Ohio) clusters resolve correctly.
 - Support for the `us5` Auvik API region (`auvikapi.us5.my.auvik.com`). Added to the `AuvikRegion` type and the auto-resolution probe list so credentials on the US5 cluster resolve correctly.
