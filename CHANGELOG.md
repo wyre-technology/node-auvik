@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/wyre-technology/node-auvik/compare/v1.2.0...v1.2.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* parse JSON:API responses (application/vnd.api+json) ([#14](https://github.com/wyre-technology/node-auvik/issues/14)) ([ccf438b](https://github.com/wyre-technology/node-auvik/commit/ccf438b8856332b9629404d4f393a82289d1d13d))
+
 # [1.2.0](https://github.com/wyre-technology/node-auvik/compare/v1.1.0...v1.2.0) (2026-06-15)
 
 
