@@ -17,7 +17,7 @@ const client = new AuvikClient({
   username: 'your-auvik-email@example.com',
   apiKey: 'your-api-key',
   // Optional: specify region if known, otherwise auto-detected
-  region: 'us1', // us1, us2, us3, us4, us5, eu1, eu2, au1, ca1
+  region: 'us1', // us1, us2, us3, us4, us5, us6, lnx, eu1, eu2, au1, ca1
 });
 
 // List all tenants
@@ -37,7 +37,7 @@ console.log(alerts.data);
 
 Auvik operates in multiple regions. If you don't specify a region, the client will automatically probe all regions to find the correct one for your credentials. For better performance, specify your region explicitly:
 
-- `us1`, `us2`, `us3`, `us4`, `us5` - United States
+- `us1`, `us2`, `us3`, `us4`, `us5`, `us6`, `lnx` - United States
 - `eu1`, `eu2` - Europe 
 - `au1` - Australia
 - `ca1` - Canada

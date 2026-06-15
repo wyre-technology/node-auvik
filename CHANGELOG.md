@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Support for the `us6` and `lnx` Auvik API regions (`auvikapi.us6.my.auvik.com`, `auvikapi.lnx.my.auvik.com`). Added to the `AuvikRegion` type and the auto-resolution probe list so credentials on those US East (Ohio) clusters resolve correctly.
 - Support for the `us5` Auvik API region (`auvikapi.us5.my.auvik.com`). Added to the `AuvikRegion` type and the auto-resolution probe list so credentials on the US5 cluster resolve correctly.
 
 ## [0.1.0] - 2026-05-21
