@@ -36,6 +36,14 @@ describe('resolveRegion', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
+  it('should accept us5 as a valid region override', async () => {
+    process.env.AUVIK_REGION = 'us5';
+
+    const region = await resolveRegion('user@test.com', 'key', mockFetch);
+    expect(region).toBe('us5');
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
   it('should probe regions sequentially and return first successful', async () => {
     // First region fails
     mockFetch
