@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/wyre-technology/node-auvik/compare/v1.0.0...v1.1.0) (2026-06-15)
+
+
+### Features
+
+* add support for us5 Auvik API region ([#12](https://github.com/wyre-technology/node-auvik/issues/12)) ([ed52b6c](https://github.com/wyre-technology/node-auvik/commit/ed52b6c3d7f07d3cc221fe22b3f07baedc69d5ec))
+
 # 1.0.0 (2026-05-21)
 
 
