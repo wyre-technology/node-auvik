@@ -43,6 +43,23 @@ describe('HttpClient', () => {
     );
   });
 
+  it('should parse JSON:API responses (content-type application/vnd.api+json)', async () => {
+    // The Auvik API is JSON:API and returns `application/vnd.api+json`, not
+    // plain `application/json`. The response body MUST still be parsed; failing
+    // to parse it returns `{}`, which makes resource mappers throw
+    // "Cannot read properties of undefined (reading 'id')".
+    const mockResponse = { data: [{ id: 'd1', type: 'device', attributes: { name: 'sw1' } }] };
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => mockResponse,
+      headers: new Headers({ 'content-type': 'application/vnd.api+json; charset=utf-8' }),
+    });
+
+    const result = await httpClient.request('/inventory/device/info');
+    expect(result).toEqual(mockResponse);
+  });
+
   it('should handle query parameters', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
