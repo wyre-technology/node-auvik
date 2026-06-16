@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/wyre-technology/node-auvik/compare/v1.2.2...v1.2.3) (2026-06-16)
+
+
+### Bug Fixes
+
+* correct single-get + statistics endpoint paths ([#16](https://github.com/wyre-technology/node-auvik/issues/16)) ([0b66488](https://github.com/wyre-technology/node-auvik/commit/0b664880c86116bdde9337965f3a72dd2f8e8492))
+
 ## [1.2.2](https://github.com/wyre-technology/node-auvik/compare/v1.2.1...v1.2.2) (2026-06-16)
 
 
