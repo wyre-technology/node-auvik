@@ -50,4 +50,15 @@ describe('StatisticsResource paths', () => {
     await stats.getDeviceStatistics({ statId: 'cpuUtilization', fromTime: 'T1', interval: 'hour', filters: { 'filter[deviceId]': 'dev9' } });
     expect(url()).toContain('filter%5BdeviceId%5D=dev9');
   });
+
+  it('defaults filter[thruTime] to now when a window is requested but thruTime is omitted', async () => {
+    // Auvik 400s without filter[thruTime]; the SDK fills it in.
+    await stats.getDeviceStatistics({ statId: 'cpuUtilization', fromTime: 'T1', interval: 'hour' });
+    expect(url()).toContain('filter%5BthruTime%5D=');
+  });
+
+  it('does not add filter[thruTime] when there is no time window (snmpPoller)', async () => {
+    await stats.getSnmpPollerStatistics({ statId: 'abc' });
+    expect(url()).not.toContain('thruTime');
+  });
 });
