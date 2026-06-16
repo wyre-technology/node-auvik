@@ -8,213 +8,90 @@ import type {
   ComponentStatistics,
   SnmpPollerStatistics
 } from '../types/statistics.js';
-import { paginate } from '../pagination.js';
+
+// Auvik statistics endpoints are `/stat/{type}/{statId}`. Time-series stats
+// (device/interface/service/component) require `filter[fromTime]` and
+// `filter[interval]`; `filter[thruTime]` is optional. Extra per-type filters
+// (e.g. `filter[deviceId]`) are passed through `options.filters` already keyed
+// as the API expects. `tenants` scopes to client tenant(s).
+function timeStatParams(options: StatisticsOptions & PaginationOptions): Record<string, unknown> {
+  const { fromTime, interval, thruTime, tenants, filters = {}, pageSize, pageAfter } = options;
+  return {
+    ...(fromTime ? { 'filter[fromTime]': fromTime } : {}),
+    ...(interval ? { 'filter[interval]': interval } : {}),
+    ...(thruTime ? { 'filter[thruTime]': thruTime } : {}),
+    ...(tenants ? { tenants } : {}),
+    ...filters,
+    ...(pageSize ? { 'page[first]': pageSize } : {}),
+    ...(pageAfter ? { 'page[after]': pageAfter } : {}),
+  };
+}
+
+function mapPage<T>(response: JsonApiResponse<T>): Page<T> {
+  const data = Array.isArray(response.data) ? response.data : [response.data];
+  return {
+    data: data.map(item => ({ id: item.id, type: item.type, ...item.attributes })) as T[],
+    links: response.links || {},
+    meta: response.meta || {},
+  };
+}
 
 export class StatisticsResource {
   constructor(private getClient: () => Promise<HttpClient>) {}
 
   async getDeviceStatistics(options: StatisticsOptions & PaginationOptions): Promise<Page<DeviceStatistics>> {
-    const { fromTime, thruTime, tenantId, pageSize, pageAfter, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-      ...(pageSize && { 'page[first]': pageSize }),
-      ...(pageAfter && { 'page[after]': pageAfter }),
-    };
-
     const client = await this.getClient();
-    const response = await client.request<JsonApiResponse<DeviceStatistics>>('/stat/device', { params });
-    const data = Array.isArray(response.data) ? response.data : [response.data];
-
-    return {
-      data: data.map(item => ({ id: item.id, type: item.type, ...item.attributes })),
-      links: response.links || {},
-      meta: response.meta || {},
-    };
-  }
-
-  async *getDeviceStatisticsAll(options: StatisticsOptions & { filters?: Record<string, unknown> }): AsyncIterable<DeviceStatistics> {
-    const { fromTime, thruTime, tenantId, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-    };
-
-    const client = await this.getClient();
-    for await (const page of paginate<DeviceStatistics>(client, '/stat/device', params)) {
-      for (const stat of page.data) {
-        yield stat;
-      }
-    }
+    const response = await client.request<JsonApiResponse<DeviceStatistics>>(
+      `/stat/device/${options.statId}`,
+      { params: timeStatParams(options) }
+    );
+    return mapPage(response);
   }
 
   async getInterfaceStatistics(options: StatisticsOptions & PaginationOptions): Promise<Page<InterfaceStatistics>> {
-    const { fromTime, thruTime, tenantId, pageSize, pageAfter, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-      ...(pageSize && { 'page[first]': pageSize }),
-      ...(pageAfter && { 'page[after]': pageAfter }),
-    };
-
     const client = await this.getClient();
-    const response = await client.request<JsonApiResponse<InterfaceStatistics>>('/stat/interface', { params });
-    const data = Array.isArray(response.data) ? response.data : [response.data];
-
-    return {
-      data: data.map(item => ({ id: item.id, type: item.type, ...item.attributes })),
-      links: response.links || {},
-      meta: response.meta || {},
-    };
-  }
-
-  async *getInterfaceStatisticsAll(options: StatisticsOptions & { filters?: Record<string, unknown> }): AsyncIterable<InterfaceStatistics> {
-    const { fromTime, thruTime, tenantId, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-    };
-
-    const client = await this.getClient();
-    for await (const page of paginate<InterfaceStatistics>(client, '/stat/interface', params)) {
-      for (const stat of page.data) {
-        yield stat;
-      }
-    }
+    const response = await client.request<JsonApiResponse<InterfaceStatistics>>(
+      `/stat/interface/${options.statId}`,
+      { params: timeStatParams(options) }
+    );
+    return mapPage(response);
   }
 
   async getServiceStatistics(options: StatisticsOptions & PaginationOptions): Promise<Page<ServiceStatistics>> {
-    const { fromTime, thruTime, tenantId, pageSize, pageAfter, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-      ...(pageSize && { 'page[first]': pageSize }),
-      ...(pageAfter && { 'page[after]': pageAfter }),
-    };
-
     const client = await this.getClient();
-    const response = await client.request<JsonApiResponse<ServiceStatistics>>('/stat/service', { params });
-    const data = Array.isArray(response.data) ? response.data : [response.data];
-
-    return {
-      data: data.map(item => ({ id: item.id, type: item.type, ...item.attributes })),
-      links: response.links || {},
-      meta: response.meta || {},
-    };
+    const response = await client.request<JsonApiResponse<ServiceStatistics>>(
+      `/stat/service/${options.statId}`,
+      { params: timeStatParams(options) }
+    );
+    return mapPage(response);
   }
 
-  async *getServiceStatisticsAll(options: StatisticsOptions & { filters?: Record<string, unknown> }): AsyncIterable<ServiceStatistics> {
-    const { fromTime, thruTime, tenantId, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-    };
-
+  async getComponentStatistics(
+    options: StatisticsOptions & PaginationOptions & { componentType: string }
+  ): Promise<Page<ComponentStatistics>> {
     const client = await this.getClient();
-    for await (const page of paginate<ServiceStatistics>(client, '/stat/service', params)) {
-      for (const stat of page.data) {
-        yield stat;
-      }
-    }
+    const response = await client.request<JsonApiResponse<ComponentStatistics>>(
+      `/stat/component/${options.componentType}/${options.statId}`,
+      { params: timeStatParams(options) }
+    );
+    return mapPage(response);
   }
 
-  async getComponentStatistics(options: StatisticsOptions & PaginationOptions): Promise<Page<ComponentStatistics>> {
-    const { fromTime, thruTime, tenantId, pageSize, pageAfter, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-      ...(pageSize && { 'page[first]': pageSize }),
-      ...(pageAfter && { 'page[after]': pageAfter }),
-    };
-
-    const client = await this.getClient();
-    const response = await client.request<JsonApiResponse<ComponentStatistics>>('/stat/component', { params });
-    const data = Array.isArray(response.data) ? response.data : [response.data];
-
-    return {
-      data: data.map(item => ({ id: item.id, type: item.type, ...item.attributes })),
-      links: response.links || {},
-      meta: response.meta || {},
-    };
-  }
-
-  async *getComponentStatisticsAll(options: StatisticsOptions & { filters?: Record<string, unknown> }): AsyncIterable<ComponentStatistics> {
-    const { fromTime, thruTime, tenantId, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-    };
-
-    const client = await this.getClient();
-    for await (const page of paginate<ComponentStatistics>(client, '/stat/component', params)) {
-      for (const stat of page.data) {
-        yield stat;
-      }
-    }
-  }
-
+  // SNMP-poller (OID) statistics live at /stat/oid/{statId} and are filtered by
+  // device/OID rather than a fromTime/interval time window.
   async getSnmpPollerStatistics(options: StatisticsOptions & PaginationOptions): Promise<Page<SnmpPollerStatistics>> {
-    const { fromTime, thruTime, tenantId, pageSize, pageAfter, filters = {}, ...rest } = options;
+    const { tenants, filters = {}, pageSize, pageAfter } = options;
     const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
+      ...(tenants ? { tenants } : {}),
       ...filters,
-      ...rest,
-      ...(pageSize && { 'page[first]': pageSize }),
-      ...(pageAfter && { 'page[after]': pageAfter }),
+      ...(pageSize ? { 'page[first]': pageSize } : {}),
+      ...(pageAfter ? { 'page[after]': pageAfter } : {}),
     };
-
     const client = await this.getClient();
-    const response = await client.request<JsonApiResponse<SnmpPollerStatistics>>('/stat/snmpPoller', { params });
-    const data = Array.isArray(response.data) ? response.data : [response.data];
-
-    return {
-      data: data.map(item => ({ id: item.id, type: item.type, ...item.attributes })),
-      links: response.links || {},
-      meta: response.meta || {},
-    };
-  }
-
-  async *getSnmpPollerStatisticsAll(options: StatisticsOptions & { filters?: Record<string, unknown> }): AsyncIterable<SnmpPollerStatistics> {
-    const { fromTime, thruTime, tenantId, filters = {}, ...rest } = options;
-    const params = {
-      fromTime,
-      thruTime,
-      ...(tenantId && { tenantId }),
-      ...filters,
-      ...rest,
-    };
-
-    const client = await this.getClient();
-    for await (const page of paginate<SnmpPollerStatistics>(client, '/stat/snmpPoller', params)) {
-      for (const stat of page.data) {
-        yield stat;
-      }
-    }
+    const response = await client.request<JsonApiResponse<SnmpPollerStatistics>>(
+      `/stat/oid/${options.statId}`,
+      { params }
+    );
+    return mapPage(response);
   }
 }
