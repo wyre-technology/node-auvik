@@ -24,3 +24,14 @@ export interface BillingUsageDevice {
   cost?: number;
   lastSeenTime?: string;
 }
+
+// Auvik billing usage is queried by a DATE range. fromDate/thruDate are sent as
+// the JSON:API params filter[fromDate]/filter[thruDate] (YYYY-MM-DD); tenants is
+// a plain scope param.
+export interface BillingUsageOptions {
+  fromDate?: string;
+  thruDate?: string;
+  tenants?: string;
+  pageSize?: number;
+  pageAfter?: string;
+}

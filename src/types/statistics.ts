@@ -2,8 +2,9 @@ export interface StatisticsOptions {
   // Auvik statistics endpoints are /stat/{type}/{statId}; statId selects the
   // specific metric (e.g. 'cpuUtilization', 'bandwidth') and is part of the path.
   statId: string;
-  // Time-series stats require filter[fromTime] + filter[interval]; thruTime is
-  // optional. (OID/SNMP-poller stats don't use these.)
+  // Time-series stats require filter[fromTime], filter[interval], and
+  // filter[thruTime]; thruTime defaults to now when omitted. (OID/SNMP-poller
+  // stats don't use these.)
   fromTime?: string;
   interval?: string;
   thruTime?: string;

@@ -10,16 +10,19 @@ import type {
 } from '../types/statistics.js';
 
 // Auvik statistics endpoints are `/stat/{type}/{statId}`. Time-series stats
-// (device/interface/service/component) require `filter[fromTime]` and
-// `filter[interval]`; `filter[thruTime]` is optional. Extra per-type filters
-// (e.g. `filter[deviceId]`) are passed through `options.filters` already keyed
-// as the API expects. `tenants` scopes to client tenant(s).
+// (device/interface/service/component) require `filter[fromTime]`,
+// `filter[interval]`, AND `filter[thruTime]` — the API 400s without thruTime —
+// so when a window is requested (fromTime present) but thruTime is omitted it
+// defaults to now. Extra per-type filters (e.g. `filter[deviceId]`) are passed
+// through `options.filters` already keyed as the API expects. `tenants` scopes
+// to client tenant(s).
 function timeStatParams(options: StatisticsOptions & PaginationOptions): Record<string, unknown> {
   const { fromTime, interval, thruTime, tenants, filters = {}, pageSize, pageAfter } = options;
+  const resolvedThruTime = thruTime || (fromTime ? new Date().toISOString() : undefined);
   return {
     ...(fromTime ? { 'filter[fromTime]': fromTime } : {}),
     ...(interval ? { 'filter[interval]': interval } : {}),
-    ...(thruTime ? { 'filter[thruTime]': thruTime } : {}),
+    ...(resolvedThruTime ? { 'filter[thruTime]': resolvedThruTime } : {}),
     ...(tenants ? { tenants } : {}),
     ...filters,
     ...(pageSize ? { 'page[first]': pageSize } : {}),
