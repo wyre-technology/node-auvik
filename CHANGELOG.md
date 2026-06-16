@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/wyre-technology/node-auvik/compare/v1.2.3...v1.2.4) (2026-06-16)
+
+
+### Bug Fixes
+
+* correct billing usage endpoints and default statistics thruTime ([#17](https://github.com/wyre-technology/node-auvik/issues/17)) ([1e31aa6](https://github.com/wyre-technology/node-auvik/commit/1e31aa6d2eeb09e05d34604d5429dfd5ed8b9939))
+
 ## [1.2.3](https://github.com/wyre-technology/node-auvik/compare/v1.2.2...v1.2.3) (2026-06-16)
 
 
