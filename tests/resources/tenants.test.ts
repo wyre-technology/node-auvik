@@ -121,7 +121,7 @@ describe('TenantsResource', () => {
       domainPrefixEnabled: true,
     });
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://api.example.com/v1/tenants/1',
+      'https://api.example.com/v1/tenants/detail/1',
       expect.any(Object)
     );
   });

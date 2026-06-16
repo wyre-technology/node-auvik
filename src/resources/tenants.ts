@@ -62,8 +62,9 @@ export class TenantsResource {
   }
 
   async get(id: string): Promise<TenantDetail> {
+    // Single-tenant read is /tenants/detail/{id} (there is no /tenants/{id}).
     const client = await this.getClient();
-    const response = await client.request<JsonApiResponse<TenantDetail>>(`/tenants/${id}`);
+    const response = await client.request<JsonApiResponse<TenantDetail>>(`/tenants/detail/${id}`);
     const data = Array.isArray(response.data) ? response.data[0] : response.data;
     return { id: data.id, ...data.attributes } as TenantDetail;
   }
