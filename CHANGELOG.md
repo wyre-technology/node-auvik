@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/wyre-technology/node-auvik/compare/v1.2.1...v1.2.2) (2026-06-16)
+
+
+### Bug Fixes
+
+* correct Auvik alert endpoint paths ([#15](https://github.com/wyre-technology/node-auvik/issues/15)) ([b6a93c7](https://github.com/wyre-technology/node-auvik/commit/b6a93c760bbd457f9b6034fe2193034d2b52b2fe))
+
 ## [1.2.1](https://github.com/wyre-technology/node-auvik/compare/v1.2.0...v1.2.1) (2026-06-15)
 
 
