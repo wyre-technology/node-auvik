@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Alert endpoints used the wrong paths (404 "resource not found").** `listHistory`/`getHistory`/`dismiss` hit `/alert/history`, `/alert/history/{id}`, and `/alert/history/{id}/dismiss`, but the real Auvik Alerts API is `/alert/history/info`, `/alert/history/info/{id}`, and `/alert/dismiss/{id}`. Corrected all three and added request-path assertions to the alerts tests.
 - **JSON:API responses were silently dropped, breaking every list/get call.** The HTTP client only parsed the body when `content-type` contained `application/json`, but the Auvik API is JSON:API and responds with `application/vnd.api+json`. As a result every successful response returned `{}`, and resource mappers then threw `Cannot read properties of undefined (reading 'id')`. The check now matches any JSON content-type (`includes('json')`), covering `application/vnd.api+json` and `; charset=utf-8` suffixes. Added a regression test.
 
 ### Added

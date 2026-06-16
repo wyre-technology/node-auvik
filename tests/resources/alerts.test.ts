@@ -51,6 +51,8 @@ describe('AlertsResource', () => {
 
     const result = await alertsResource.listHistory();
 
+    // Alerts live under /alert/history/info (Read Multiple Alerts' Info), NOT /alert/history.
+    expect(mockFetch.mock.calls[0][0]).toBe('https://api.example.com/v1/alert/history/info');
     expect(result.data).toHaveLength(1);
     expect(result.data[0]).toMatchObject({
       id: '1',
@@ -89,6 +91,7 @@ describe('AlertsResource', () => {
 
     const result = await alertsResource.getHistory('1');
 
+    expect(mockFetch.mock.calls[0][0]).toBe('https://api.example.com/v1/alert/history/info/1');
     expect(result).toMatchObject({
       id: '1',
       alertType: 'device-offline',
@@ -111,7 +114,7 @@ describe('AlertsResource', () => {
     await expect(alertsResource.dismiss('1', { reason: 'False positive' })).resolves.not.toThrow();
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://api.example.com/v1/alert/history/1/dismiss',
+      'https://api.example.com/v1/alert/dismiss/1',
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify({ reason: 'False positive' }),
