@@ -33,6 +33,24 @@ const alerts = await client.alerts.listHistory();
 console.log(alerts.data);
 ```
 
+## Raw requests
+
+For endpoints or query parameters the typed resources don't expose, use `client.request()`. It reuses the client's credentials, region resolution, retry/backoff and JSON:API error mapping, and returns the parsed JSON:API response **unmodified** (no resource flattening). The `path` is relative to the region base URL — don't include the host or the `/v1` prefix.
+
+```typescript
+// GET with bracketed JSON:API filter/pagination params
+const recent = await client.request('/alert/history/info', {
+  params: { 'filter[detectedTimeAfter]': '2026-06-01', 'page[first]': 100 },
+});
+console.log(recent.data);
+
+// POST (defaults to GET when method is omitted)
+await client.request('/alert/dismiss/<alertId>', {
+  method: 'POST',
+  body: { reason: 'acknowledged via automation' },
+});
+```
+
 ## Regions
 
 Auvik operates in multiple regions. If you don't specify a region, the client will automatically probe all regions to find the correct one for your credentials. For better performance, specify your region explicitly:
