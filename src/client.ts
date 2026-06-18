@@ -1,5 +1,5 @@
-import type { AuvikClientConfig, AuvikRegion } from './types/index.js';
-import { HttpClient } from './http.js';
+import type { AuvikClientConfig, AuvikRegion, JsonApiResponse } from './types/index.js';
+import { HttpClient, type RequestOptions } from './http.js';
 import { resolveRegion } from './region.js';
 import { CredentialsResource } from './resources/credentials.js';
 import { TenantsResource } from './resources/tenants.js';
@@ -52,6 +52,18 @@ export class AuvikClient {
     this.alerts = new AlertsResource(getClient);
     this.statistics = new StatisticsResource(getClient);
     this.billing = new BillingResource(getClient);
+  }
+
+  /**
+   * Perform a raw request against the Auvik API using this client's
+   * credentials, region/base URL, retry/backoff and JSON:API error mapping.
+   * Returns the parsed JSON:API response unmodified (no resource flattening).
+   * Intended for callers that need an endpoint or query param the typed
+   * resources don't expose yet. `path` is relative to the region base URL.
+   */
+  async request<T = JsonApiResponse>(path: string, options: RequestOptions = {}): Promise<T> {
+    const client = await this.getHttpClient();
+    return client.request<T>(path, options);
   }
 
   private async getHttpClient(): Promise<HttpClient> {
