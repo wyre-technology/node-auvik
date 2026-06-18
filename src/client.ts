@@ -59,7 +59,11 @@ export class AuvikClient {
    * credentials, region/base URL, retry/backoff and JSON:API error mapping.
    * Returns the parsed JSON:API response unmodified (no resource flattening).
    * Intended for callers that need an endpoint or query param the typed
-   * resources don't expose yet. `path` is relative to the region base URL.
+   * resources don't expose yet.
+   *
+   * `path` is relative to the region base URL — do not include the host or the
+   * `/v1` prefix (e.g. pass `/alert/history/info`). Defaults to a GET when
+   * `options.method` is omitted.
    */
   async request<T = JsonApiResponse>(path: string, options: RequestOptions = {}): Promise<T> {
     const client = await this.getHttpClient();

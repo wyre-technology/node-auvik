@@ -88,7 +88,7 @@ describe('AuvikClient', () => {
       headers: new Headers({ 'content-type': 'application/vnd.api+json' }),
     });
 
-    await client.request('/alert/history/info', {
+    const result = await client.request('/alert/history/info', {
       params: { 'filter[detectedTimeAfter]': '2026-06-01', 'page[first]': 50 },
     });
 
@@ -97,6 +97,7 @@ describe('AuvikClient', () => {
     expect(calledUrl).toContain('filter%5BdetectedTimeAfter%5D=2026-06-01');
     expect(calledUrl).toContain('page%5Bfirst%5D=50');
     expect(mockFetch.mock.calls[0][1]).toMatchObject({ method: 'GET' });
+    expect(result).toEqual({ data: [], links: {}, meta: {} });
   });
 
   it('request() forwards method and JSON body for POST', async () => {
@@ -113,11 +114,32 @@ describe('AuvikClient', () => {
       headers: new Headers(),
     });
 
-    await client.request('/alert/dismiss/a1', { method: 'POST', body: { reason: 'noise' } });
+    const result = await client.request('/alert/dismiss/a1', { method: 'POST', body: { reason: 'noise' } });
 
     expect(String(mockFetch.mock.calls[0][0])).toBe('https://auvikapi.us1.my.auvik.com/v1/alert/dismiss/a1');
     const init = mockFetch.mock.calls[0][1] as { method: string; body?: string };
     expect(init.method).toBe('POST');
     expect(String(init.body)).toContain('reason');
+    expect(result).toEqual({});
+  });
+
+  it('request() defaults to GET when options are omitted', async () => {
+    const client = new AuvikClient({
+      username: 'test@example.com',
+      apiKey: 'test-key',
+      region: 'us1',
+      fetchImpl: mockFetch,
+    });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: [], links: {}, meta: {} }),
+      headers: new Headers({ 'content-type': 'application/vnd.api+json' }),
+    });
+
+    await client.request('/tenants');
+
+    expect(String(mockFetch.mock.calls[0][0])).toBe('https://auvikapi.us1.my.auvik.com/v1/tenants');
+    expect(mockFetch.mock.calls[0][1]).toMatchObject({ method: 'GET' });
   });
 });
