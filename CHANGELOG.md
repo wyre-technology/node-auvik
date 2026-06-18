@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/wyre-technology/node-auvik/compare/v1.2.4...v1.3.0) (2026-06-18)
+
+
+### Features
+
+* add public AuvikClient.request() raw passthrough ([69549e6](https://github.com/wyre-technology/node-auvik/commit/69549e6265b1d078ee9ed17de1d85a6a84c76b92))
+
 ## [1.2.4](https://github.com/wyre-technology/node-auvik/compare/v1.2.3...v1.2.4) (2026-06-16)
 
 
